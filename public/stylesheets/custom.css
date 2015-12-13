@@ -1,0 +1,10 @@
+body {
+    background-image: url("/images/nlbackground.jpg");
+    background-color: #cccccc;
+    font-family: 'Roboto', sans-serif;
+}
+.jumbotron { background-color: rgba(0,0,0,0); }
+input { height: 30px; }
+.navbar-inverse { background-color: rgba(0,0,0,0); border-bottom: none;}
+a {color: #d3d3d3; }
+a:hover, a:visited, a:active {text-decoration: none; color: #d3d3d3; }

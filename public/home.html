@@ -1,0 +1,20 @@
+<div class="container">
+      <!--<div class="jumbotron text-center">-->
+      <!--  <h1>Mean Vote</h1>-->
+      <!--  <p>Create custom polls with live results.</p>-->
+      <!--  <a href="/#/register" class="btn btn-info ">Signup</a>-->
+      <!--</div>-->
+      <div class="jumbotron text-center">
+        <div class="form-group">
+      <form ng-submit="get(loc)" class="col-md-8 col-md-offset-2 ">
+        <div  class="form-group col-md-10">
+          <input type="text" ng-model="loc" class="form-control text-center" id="exampleInputEmail2" placeholder="Where are you at?">
+        </div>
+        <button type="submit" class="btn btn-info col-md-2">Go</button>
+      </form>
+      <div ng-repeat="loc in locs">
+        <p>{{loc}}</p>
+      </div>
+        
+      </div>
+    </div>
