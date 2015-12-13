@@ -30,8 +30,8 @@ function yelpApi(){
   
     /* We set the require parameters here */
     var required_parameters = {
-      oauth_consumer_key : process.env.oauth_consumer_key || "ZJBQVuXuPLk9b9wDP1IEjQ",
-      oauth_token : process.env.oauth_token || "x_TN7EXnuJ5_1KCKKBoyXZka2mIQ_8RO",
+      oauth_consumer_key : process.env.oauth_consumer_key,
+      oauth_token : process.env.oauth_token,
       oauth_nonce : n(),
       oauth_timestamp : n().toString().substr(0,10),
       oauth_signature_method : 'HMAC-SHA1',
@@ -42,8 +42,8 @@ function yelpApi(){
     var parameters = _.assign(default_parameters, set_parameters, required_parameters);
   
     /* We set our secrets here */
-    var consumerSecret = process.env.consumerSecret || "eGG5_wbekPE_XVKfUWwi6FJQz1Q";
-    var tokenSecret = process.env.tokenSecret || "zCSQRRFmcHOSyWlTKmF7h43E5EU";
+    var consumerSecret = process.env.consumerSecret;
+    var tokenSecret = process.env.tokenSecret;
   
     /* Then we call Yelp's Oauth 1.0a server, and it returns a signature */
     /* Note: This signature is only good for 300 seconds after the oauth_timestamp */

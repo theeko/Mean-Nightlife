@@ -1,8 +1,9 @@
+require("dotenv").load();
 require("./models/Users");
 require("./models/Locastions");
 var mongoose = require("mongoose");
 require('./config/passport');
-mongoose.connect("mongodb://redditadmin:redditadmin@ds061464.mongolab.com:61464/reddit-clone");
+mongoose.connect(process.env.mongo_uri);
 var passport = require('passport');
 var express = require('express');
 var path = require('path');
