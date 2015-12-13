@@ -4,17 +4,30 @@
       <!--  <p>Create custom polls with live results.</p>-->
       <!--  <a href="/#/register" class="btn btn-info ">Signup</a>-->
       <!--</div>-->
-      <div class="jumbotron text-center">
-        <div class="form-group">
+      <div class="jumbotron ">
+        <div class="form-group text-center">
       <form ng-submit="get(loc)" class="col-md-8 col-md-offset-2 ">
         <div  class="form-group col-md-10">
           <input type="text" ng-model="loc" class="form-control text-center" id="exampleInputEmail2" placeholder="Where are you at?">
         </div>
-        <button type="submit" class="btn btn-info col-md-2">Go</button>
+        <button type="submit" class="btn btn-success col-md-2">Go</button>
       </form>
-      <div ng-repeat="loc in locs">
-        <p>{{loc}}</p>
+      <div ng-repeat="loc in locs.businesses">
+        <div class="row">
+        <div class="places col-md-8 col-md-offset-2 well">
+          <div class="col-md-2">
+            <a href="{{loc.url}}" target="_blank"><img class="media-left" ng-src="{{loc.image_url}}" /></a>
+         </div>
+          <div class="col-md-4 col-md-offset-1">
+             <a href="{{loc.url}}" target="_blank"><h4 class="text-left helem">{{loc.name}}</h4></a>
+             <span><img ng-src="{{rating_image_url}}"></span>
+          </div>
+          <button class="btn btn-info col-md-offset-2">mark as going</button>
+          <div class="col-md-10">
+            <p class="descp ">{{loc.snippet_text}}</p>
+          </div>
+        </div>
+        </div>
       </div>
-        
       </div>
     </div>

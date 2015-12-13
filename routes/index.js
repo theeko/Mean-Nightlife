@@ -48,10 +48,27 @@ router.post('/login', function(req, res, next){
     })(req, res, next);
 });
 
+
+
 router.get("/yelp/:location", function(req, res) {
     yelpApi.request_yelp( req.params.location, function(error, response, body){
       if(error){  console.log(error); return; }
-      console.log("asd");
+      // var yelpData = JSON.parse(body).businesses;
+      // location = new Location();
+      // yelpData.forEach(function(data){
+      //   Location.find({ name: data.name }, function(err, loc){
+      //     if(!!loc){
+      //       location.name = data.name;
+      //       location.url = data.url;
+      //       location.image_url = data.image_url;
+      //       location.descr = data.snippet_text;
+      //       location.rating_img_url = data.rating_image_url
+      //     }
+          
+      //   })
+      // })
+      // yelp -> name url image_url snippet_text rating_image_url
+      Location.find({})
       res.json(JSON.parse(body));
     });
 });
