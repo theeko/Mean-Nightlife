@@ -8,6 +8,12 @@ app.config(['$stateProvider', '$urlRouterProvider',
             templateUrl: '/home.html',
             controller: 'mainCtrl'
             })
+          $stateProvider
+          .state('profile', {
+            url: '/profile',
+            templateUrl: '/profile.html',
+            controller: 'profileCtrl'
+            })
           .state("locationS", {
             url: "location/{loc}",
             templateUrl: "/home.html",
@@ -53,9 +59,24 @@ app.controller("mainCtrl", ["$scope", "auth", "locs", function($scope, auth, loc
     $scope.currentUser = auth.currentUser;
     $scope.logOut = auth.logOut;
     $scope.locs = locs.locs;
-    $scope.get = function(loc){
-      locs.get(loc);
+    $scope.get = function(search){
+      locs.get(search);
+      $scope.search = "";
     };
+    
+    $scope.addLoc = function(info){
+      var data = {
+        img_r_url: info.rating_img_url_small,
+        url: info.url,
+        img_url: info.image_url,
+        name: info.name,
+        rating: info.rating,
+        desc: info.snippet_text,
+        username: auth.currentUser()
+      };
+      locs.addLoc(data);
+    };
+    
 }]);
 
 app.factory("locs", ["$http", "auth", function($http, auth){
@@ -66,6 +87,15 @@ app.factory("locs", ["$http", "auth", function($http, auth){
          angular.copy(data, x.locs);
         });
     };
+    
+    x.addLoc = function(data){
+      $http.post("/yelp/", data, {
+        headers: { Authorization: 'Bearer' + auth.getToken()}
+      }).success(function(bd){
+        x.locs.push(bd);
+      });
+      window.location.href = "#profile";
+    }
     
   return x;
   

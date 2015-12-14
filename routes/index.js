@@ -48,6 +48,27 @@ router.post('/login', function(req, res, next){
     })(req, res, next);
 });
 
+router.post("/yelp/", function(req, res, next) {
+  var location = new Location();
+  location.username = req.body.username;
+  location.img_r_url = req.body.img_r_url;
+  location.img_url = req.body.img_url;
+  location.rating = req.body.rating;
+  location.url = req.body.url;
+  location.desc = req.body.desc;
+  console.log(location);
+  Location.find({name: req.body.name}, function(err,found){
+    if(err){ return next(err); }
+    if(found){ return; }
+    else {
+      location.save(function (err,result) {
+        if(err){ return console.log(err); }
+        res.json(result);
+      });
+    }
+  });
+  
+});
 
 
 router.get("/yelp/:location", function(req, res) {

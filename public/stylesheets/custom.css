@@ -12,3 +12,5 @@ a:hover, a:visited, a:active {text-decoration: none; color: #d3d3d3; }
 .well { background: #d3d3d3; }
 .descp { font-size: 1em !important; }
 .goin p { font-size: 0.6em !important; }
+.adress { font-size: 0.7em !important; }
+.form { margin-bottom: 30px; }

@@ -25,7 +25,7 @@ function yelpApi(){
     var default_parameters = {
           term: 'Nightlife',
           location: set_parameters,
-          limit: '10'
+          limit: '20'
         };
   
     /* We set the require parameters here */
