@@ -48,19 +48,23 @@ router.post('/login', function(req, res, next){
     })(req, res, next);
 });
 
-router.post("/yelp/", function(req, res, next) {
-  var location = new Location();
-  location.username = req.body.username;
-  location.img_r_url = req.body.img_r_url;
-  location.img_url = req.body.img_url;
-  location.rating = req.body.rating;
-  location.url = req.body.url;
-  location.desc = req.body.desc;
+router.post("/api", function(req, res, next) {
+  var location = new Location(req.body);
+  // location.people = req.body.username;
+  // location.img_r_url = req.body.img_r_url;
+  // location.img_url = req.body.img_url;
+  // location.rating = req.body.rating;
+  // location.url = req.body.url;
+  // location.desc = req.body.desc;
+  // location.name = req.body.name.toLowerCase();
   console.log(location);
   Location.find({name: req.body.name}, function(err,found){
     if(err){ return next(err); }
-    if(found){ return; }
-    else {
+    if(found){ 
+      // if(found.people.indexOf(req.body.username) == -1){
+      //   found.people.push(req.body.username);
+      // }
+    }else {
       location.save(function (err,result) {
         if(err){ return console.log(err); }
         res.json(result);
@@ -68,6 +72,13 @@ router.post("/yelp/", function(req, res, next) {
     }
   });
   
+});
+
+router.get("/locations", function(req, res, next) {
+    Location.find(function (err,locs) {
+      if(err){ return next(err); }
+      res.json(locs);   
+    });
 });
 
 

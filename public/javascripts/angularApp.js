@@ -6,24 +6,39 @@ app.config(['$stateProvider', '$urlRouterProvider',
           .state('home', {
             url: '/home',
             templateUrl: '/home.html',
-            controller: 'mainCtrl'
+            controller: 'mainCtrl',
+            onEnter: ["locs", function(locs){
+              locs.x = {};
+            }]
             })
-          $stateProvider
+          .state('locations', {
+            url: '/locations',
+            templateUrl: '/locations.html',
+            controller: 'locationsCtrl',
+            onEnter: ["$state", "auth", function ($state, auth) {
+                if(!auth.isLoggedIn){ $state.go("home"); }
+              }],
+            resolve: {
+                locas: ["locs", function(locs){
+                  return locs.getLocs();
+                }]
+              }
+            })
           .state('profile', {
             url: '/profile',
             templateUrl: '/profile.html',
             controller: 'profileCtrl'
             })
-          .state("locationS", {
-            url: "location/{loc}",
-            templateUrl: "/home.html",
-            controller: "mainCtrl",
-            resolve: {
-              search: ["$stateParams", "search", function($stateParams, search){
-                return search.get($stateParams.loc);
-              }]
-            }
-          })
+          // .state("locationS", {
+          //   url: "location/{loc}",
+          //   templateUrl: "/home.html",
+          //   controller: "mainCtrl",
+          //   resolve: {
+          //     search: ["$stateParams", "search", function($stateParams, search){
+          //       return search.get($stateParams.loc);
+          //     }]
+          //   }
+          // })
           .state('register', {
             url: '/register',
             templateUrl: '/register.html',
@@ -54,6 +69,11 @@ app.controller("profileCtrl", ["locs","auth","$scope", function(locs, auth, $sco
     $scope.x = locs.x;
 }]);
 
+app.controller("locationsCtrl", ["locs","auth","$scope","locas", function(locs, auth, $scope, locas){
+    $scope.currentUser = auth.currentUser();
+    $scope.locs = locas;
+}]);
+
 app.controller("mainCtrl", ["$scope", "auth", "locs", function($scope, auth, locs){
     $scope.isLoggedIn = auth.isLoggedIn;
     $scope.currentUser = auth.currentUser;
@@ -64,7 +84,9 @@ app.controller("mainCtrl", ["$scope", "auth", "locs", function($scope, auth, loc
       $scope.search = "";
     };
     
-    $scope.addLoc = function(info){
+    $scope.addLocation = function(info){
+      
+        
       var data = {
         img_r_url: info.rating_img_url_small,
         url: info.url,
@@ -72,7 +94,7 @@ app.controller("mainCtrl", ["$scope", "auth", "locs", function($scope, auth, loc
         name: info.name,
         rating: info.rating,
         desc: info.snippet_text,
-        username: auth.currentUser()
+        people: [auth.currentUser()]
       };
       locs.addLoc(data);
     };
@@ -89,13 +111,19 @@ app.factory("locs", ["$http", "auth", function($http, auth){
     };
     
     x.addLoc = function(data){
-      $http.post("/yelp/", data, {
-        headers: { Authorization: 'Bearer' + auth.getToken()}
+      $http.post('/api', data, {
+          headers: {Authorization: 'Bearer '+auth.getToken()}
       }).success(function(bd){
-        x.locs.push(bd);
+        angular.copy(bd, x.locs);
+         window.location.href = "#profile";
       });
-      window.location.href = "#profile";
-    }
+    };
+    
+    x.getLocs = function () {
+      $http.get("/locations").success(function (data) {
+        return data;
+      });
+    };
     
   return x;
   

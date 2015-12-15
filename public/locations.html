@@ -1,0 +1,17 @@
+<div ng-repeat="loc in locs.businesses">
+    <div class="row">
+        <div class="places col-md-8 col-md-offset-2 well">
+        <div class="col-md-2">
+        <span><img ng-src="{{loc.rating_img_url_small}}"></span><span>   {{loc.rating}}</span>
+        <a href="{{loc.url}}" target="_blank"><img class="media-left" ng-src="{{loc.image_url}}" /></a>
+        </div>
+        <div class="col-md-4 col-md-offset-1">
+         <a href="{{loc.url}}" target="_blank"><h4 class="text-left helem">{{loc.name}}</h4></a>
+        </div>
+        <div class="col-md-10">
+        <p class="descp ">{{loc.snippet_text}}</p>
+        </div>
+        <div class="col-md-10">
+        <p class="address ">Adress: {{loc.location.address[0]}}</p>
+    </div>
+</div>
