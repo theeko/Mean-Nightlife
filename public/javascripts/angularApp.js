@@ -15,9 +15,9 @@ app.config(['$stateProvider', '$urlRouterProvider',
             url: '/locations',
             templateUrl: '/locations.html',
             controller: 'locationsCtrl',
-            onEnter: ["$state", "auth", function ($state, auth) {
-                if(!auth.isLoggedIn){ $state.go("home"); }
-              }],
+            // onEnter: ["$state", "auth", function ($state, auth) {
+            //     if(!auth.isLoggedIn){ $state.go("home"); }
+            //   }],
             resolve: {
                 locas: ["locs", function(locs){
                   return locs.getLocs();
@@ -27,7 +27,12 @@ app.config(['$stateProvider', '$urlRouterProvider',
           .state('profile', {
             url: '/profile',
             templateUrl: '/profile.html',
-            controller: 'profileCtrl'
+            controller: 'profileCtrl',
+            resolve: {
+                locas: ["locs", function(locs){
+                  return locs.userlocs(currentUser);
+                }]
+              }
             })
           // .state("locationS", {
           //   url: "location/{loc}",
@@ -64,14 +69,15 @@ app.config(['$stateProvider', '$urlRouterProvider',
   ]);
 
 
-app.controller("profileCtrl", ["locs","auth","$scope", function(locs, auth, $scope){
+app.controller("profileCtrl", ["locs","auth","$scope","locas", function(locs, auth, $scope, locas){
     $scope.currentUser = auth.currentUser();
-    $scope.x = locs.x;
+    $scope.locas = locas;
 }]);
 
 app.controller("locationsCtrl", ["locs","auth","$scope","locas", function(locs, auth, $scope, locas){
     $scope.currentUser = auth.currentUser();
-    $scope.locs = locas;
+    $scope.locs = locs.locs;
+    $scope.locas = locas;
 }]);
 
 app.controller("mainCtrl", ["$scope", "auth", "locs", function($scope, auth, locs){
@@ -94,6 +100,7 @@ app.controller("mainCtrl", ["$scope", "auth", "locs", function($scope, auth, loc
         name: info.name,
         rating: info.rating,
         desc: info.snippet_text,
+        adress: info.location.address[0],
         people: [auth.currentUser()]
       };
       locs.addLoc(data);
@@ -114,13 +121,19 @@ app.factory("locs", ["$http", "auth", function($http, auth){
       $http.post('/api', data, {
           headers: {Authorization: 'Bearer '+auth.getToken()}
       }).success(function(bd){
-        angular.copy(bd, x.locs);
+        console.log("bd received")
          window.location.href = "#profile";
       });
     };
     
     x.getLocs = function () {
-      $http.get("/locations").success(function (data) {
+      return $http.get("/locations").success(function (data) {
+        return data;
+      });
+    };
+    
+    x.userLocs = function (username) {
+      $http.get("/userlocs/" + username).success(function (data) {
         return data;
       });
     };

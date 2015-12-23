@@ -7,6 +7,7 @@ var LocationSchema = new mongoose.Schema({
    url: String,
    img_url: String,
    rating: Number,
+   adress: String,
    desc: String
 });
 
