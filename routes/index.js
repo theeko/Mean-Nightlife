@@ -49,44 +49,36 @@ router.post('/login', function(req, res, next){
 });
 
 router.post("/api", function(req, res, next) {
-  var location = new Location(req.body);
-  console.log(req.body.people);
-  // location.save(function (err,result) {
-  //       if(err){ return console.log(err); }
-  //       res.json(result);
-  //     });
   
   Location.find({name: req.body.name}, function(err,found){
+    console.log(found.name);
     if(err){ return next(err); }
+    
     if (found.name){ 
       if(found.people.indexOf(req.body.username) == -1)
         found.people.push(req.body.username);
         found.save();
-        console.log("saved new user to founded doc");
     }else {
+      var location = new Location(req.body);
       location.save(function (err,result) {
         if(err){ return console.log(err); }
         res.json(result);
       });
     }
-  });
-  
+  }
+  );
 });
 
 router.get("/locations", function(req, res, next) {
     Location.find(function (err,locs) {
       if(err){ return next(err); }
-      console.log(locs);
-      console.log("/locations");
       res.json(locs);   
     });
 });
 
 router.get("/userlocs/:username", function(req, res, next) {
-    Location.find({username: req.params.username},function (err,locs) {
+    Location.find({people: req.params.username},function (err,locs) {
       if(err){ return next(err); }
-      console.log(locs);
-      console.log("/userlocs");
       res.json(locs);  
     });
 });
@@ -95,23 +87,22 @@ router.get("/userlocs/:username", function(req, res, next) {
 router.get("/yelp/:location", function(req, res) {
     yelpApi.request_yelp( req.params.location, function(error, response, body){
       if(error){  console.log(error); return; }
-      // var yelpData = JSON.parse(body).businesses;
-      // location = new Location();
-      // yelpData.forEach(function(data){
-      //   Location.find({ name: data.name }, function(err, loc){
-      //     if(!!loc){
-      //       location.name = data.name;
-      //       location.url = data.url;
-      //       location.image_url = data.image_url;
-      //       location.descr = data.snippet_text;
-      //       location.rating_img_url = data.rating_image_url
-      //     }
-          
-      //   })
-      // })
-      // yelp -> name url image_url snippet_text rating_image_url
-      Location.find({})
       res.json(JSON.parse(body));
+    });
+});
+
+router.delete("/locs/:locname/:username", function (req,res,next) {
+  Location.find({name: req.params.locname}, function(err, found) {
+    found.forEach(function (elem, index) {
+    if(err){ next(err); }
+      var ind = elem.people.indexOf(req.params.username);
+      elem.people.splice(ind,1);
+      if(elem.people.length == 0){
+        elem.remove(function(err, loc){
+          if(err){ return next(err) }
+          res.json(loc);
+      })}
+    });
     });
 });
 

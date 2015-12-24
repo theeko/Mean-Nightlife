@@ -29,8 +29,8 @@ app.config(['$stateProvider', '$urlRouterProvider',
             templateUrl: '/profile.html',
             controller: 'profileCtrl',
             resolve: {
-                locas: ["locs", function(locs){
-                  return locs.userlocs(currentUser);
+                userlocas: ["locs","auth", function(locs, auth){
+                  return locs.userLocs("aaaaaa");
                 }]
               }
             })
@@ -69,9 +69,13 @@ app.config(['$stateProvider', '$urlRouterProvider',
   ]);
 
 
-app.controller("profileCtrl", ["locs","auth","$scope","locas", function(locs, auth, $scope, locas){
+app.controller("profileCtrl", ["locs","auth","$scope","userlocas", function(locs, auth, $scope, userlocas){
     $scope.currentUser = auth.currentUser();
-    $scope.locas = locas;
+    $scope.locas = userlocas;
+    $scope.destroy = function (locname, index) {
+      locs.deleteLoc(locname,$scope.currentUser);
+      window.location.href = "#home";
+    };
 }]);
 
 app.controller("locationsCtrl", ["locs","auth","$scope","locas", function(locs, auth, $scope, locas){
@@ -82,7 +86,7 @@ app.controller("locationsCtrl", ["locs","auth","$scope","locas", function(locs, 
 
 app.controller("mainCtrl", ["$scope", "auth", "locs", function($scope, auth, locs){
     $scope.isLoggedIn = auth.isLoggedIn;
-    $scope.currentUser = auth.currentUser;
+    $scope.currentUser = auth.currentUser();
     $scope.logOut = auth.logOut;
     $scope.locs = locs.locs;
     $scope.get = function(search){
@@ -133,8 +137,14 @@ app.factory("locs", ["$http", "auth", function($http, auth){
     };
     
     x.userLocs = function (username) {
-      $http.get("/userlocs/" + username).success(function (data) {
-        return data;
+      return $http.get("/userlocs/" + username).success(function (data) {
+         data;
+      });
+    };
+    
+    x.deleteLoc = function (locname,username) {
+      return $http.delete("/locs/" + locname + "/" + username, null, {
+        headers: { Authorization: "Bearer" + auth.getToken() }
       });
     };
     

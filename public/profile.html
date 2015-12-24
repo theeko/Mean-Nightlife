@@ -1,23 +1,24 @@
-
-<div class="container text-center">
-    <h1>{{currentUser}}</h1>
-    <div ng-repeat="loc in locs">
-        <div class="row">
+<div class="container">
+    <h3 class="text-center">My Marks</h3>
+    <div ng-repeat="loc in locas.data track by $index">
+    <div class="row">
         <div class="places col-md-8 col-md-offset-2 well">
-          <div class="col-md-2">
-            <span><img ng-src="{{loc.rating_img_url_small}}"></span><span>   {{loc.rating}}</span>
-            <a href="{{loc.url}}" target="_blank"><img class="media-left" ng-src="{{loc.image_url}}" /></a>
-         </div>
-          <div class="col-md-4 col-md-offset-1">
-            
-             <a href="{{loc.url}}" target="_blank"><h4 class="text-left helem">{{loc.name}}</h4></a>
-             
-          </div>
-          <button class="btn btn-info col-md-offset-2" ng-click="addLocation(loc)">unmark it</button>
-          <div class="col-md-10">
-            <p class="descp ">{{loc.snippet_text}}</p>
-          </div>
-          <div class="col-md-10">
-            <p class="address ">Adress: {{loc.location.address[0]}}</p>
-          </div>
+        <div class="col-md-2">
+        <span><img ng-src="{{loc.img_r_url}}"></span><span>   {{loc.rating}}</span>
+        <a href="{{loc.url}}" target="_blank"><img class="media-left" ng-src="{{loc.img_url}}" /></a>
+        </div>
+        <div class="col-md-4 col-md-offset-1">
+         <a href="{{loc.url}}" target="_blank"><h4 class="text-left helem">{{loc.name}}</h4></a>
+        </div>
+        <button class="btn btn-danger col-md-offset-2" ng-click="destroy(loc.name, $index)">unmark it</button>
+        <div class="col-md-10">
+        <p class="descp ">{{loc.desc}}</p>
+        </div>
+        <div class="col-md-10">
+        <p class="address ">Adress: {{loc.adress}}</p>
+        <h5>Who is going:</h5>
+        <div class="people" ng-repeat="person in loc.people">
+            <span> {{person}} </span>
+        </div>
+    </div>
 </div>
