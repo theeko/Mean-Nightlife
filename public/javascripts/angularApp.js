@@ -9,7 +9,12 @@ app.config(['$stateProvider', '$urlRouterProvider',
             controller: 'mainCtrl',
             onEnter: ["locs", function(locs){
               locs.x = {};
-            }]
+            }],
+            resolve: {
+                locas: ["locs","auth", function(locs, auth){
+                  return locs.userLocs(auth.currentUser());
+                }]
+              }
             })
           .state('locations', {
             url: '/locations',
@@ -30,7 +35,7 @@ app.config(['$stateProvider', '$urlRouterProvider',
             controller: 'profileCtrl',
             resolve: {
                 userlocas: ["locs","auth", function(locs, auth){
-                  return locs.userLocs("aaaaaa");
+                  return locs.userLocs(auth.currentUser());
                 }]
               }
             })
@@ -84,14 +89,29 @@ app.controller("locationsCtrl", ["locs","auth","$scope","locas", function(locs, 
     $scope.locas = locas;
 }]);
 
-app.controller("mainCtrl", ["$scope", "auth", "locs", function($scope, auth, locs){
+app.controller("mainCtrl", ["$scope", "auth", "locs", "locas", function($scope, auth, locs, locas){
     $scope.isLoggedIn = auth.isLoggedIn;
     $scope.currentUser = auth.currentUser();
     $scope.logOut = auth.logOut;
     $scope.locs = locs.locs;
+    $scope.locas = locas;
+    $scope.locnameArr;
+    $scope.locnames = function () {
+      $scope.locnameArr = [];
+      locas.data.forEach(function(elem,ind){
+        $scope.locnameArr.push(elem.name);
+      });
+    };
+    
+    $scope.destroy = function (locname, index) {
+      locs.deleteLoc(locname,$scope.currentUser);
+      window.location.href = "#profile";
+    };
+    
     $scope.get = function(search){
       locs.get(search);
       $scope.search = "";
+      $scope.locnames();
     };
     
     $scope.addLocation = function(info){

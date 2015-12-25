@@ -14,7 +14,7 @@
         <div class="col-md-10">
         <p class="address ">Adress: {{loc.adress}}</p>
         <span><b>Who is going :  </b></span>
-        <span class="people" ng-repeat="person in loc.people">
+        <span class="people" ng-repeat="person in loc.people track by $index">
             <span>  {{person}}  </span>
         </span>
     </div>

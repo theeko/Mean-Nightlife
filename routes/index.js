@@ -51,14 +51,17 @@ router.post('/login', function(req, res, next){
 router.post("/api", function(req, res, next) {
   
   Location.find({name: req.body.name}, function(err,found){
-    console.log(found.name);
+    console.log(found[0]);
     if(err){ return next(err); }
     
-    if (found.name){ 
-      if(found.people.indexOf(req.body.username) == -1)
-        found.people.push(req.body.username);
-        found.save();
-    }else {
+    if (found[0]){ 
+      if(found[0].people.indexOf(req.body.people) == -1){
+        found[0].addToPeople(req.body.people, function(err,loc){
+          if(err){ next(err); }
+          console.log(loc);
+          res.json(loc);
+        });
+    }}else {
       var location = new Location(req.body);
       location.save(function (err,result) {
         if(err){ return console.log(err); }
@@ -78,6 +81,7 @@ router.get("/locations", function(req, res, next) {
 
 router.get("/userlocs/:username", function(req, res, next) {
     Location.find({people: req.params.username},function (err,locs) {
+      console.log(req.params.username);
       if(err){ return next(err); }
       res.json(locs);  
     });

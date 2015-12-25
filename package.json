@@ -2,6 +2,7 @@
   "name": "nightlife-app",
   "version": "0.0.0",
   "private": true,
+  "node": "4.1.1",
   "scripts": {
     "start": "node ./bin/www"
   },

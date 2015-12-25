@@ -11,4 +11,9 @@ var LocationSchema = new mongoose.Schema({
    desc: String
 });
 
+LocationSchema.methods.addToPeople = function(user,cb){
+   this.people.push(user);
+   this.save(cb);
+};
+
 mongoose.model("Location", LocationSchema);
